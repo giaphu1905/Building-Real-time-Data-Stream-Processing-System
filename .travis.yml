@@ -1,0 +1,10 @@
+language: shell
+
+jobs:
+  include:
+    - stage: deploy
+      script:
+        - cd tf-k8s
+        - terraform init
+        - terraform apply -auto-approve -target=helm_release.spark-operator
+        - terraform apply -auto-approve
