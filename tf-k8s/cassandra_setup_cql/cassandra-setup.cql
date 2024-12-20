@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS running_averages_15_sec(
     symbol text,
     price_volume_multiply double,
     ingest_timestamp timestamp,
-    PRIMARY KEY((uuid),ingest_timestamp))
+    PRIMARY KEY((symbol),ingest_timestamp))
 WITH CLUSTERING ORDER BY (ingest_timestamp DESC);
 
-CREATE INDEX IF NOT EXISTS ON running_averages_15_sec (symbol);
+CREATE INDEX IF NOT EXISTS ON running_averages_15_sec (uuid);

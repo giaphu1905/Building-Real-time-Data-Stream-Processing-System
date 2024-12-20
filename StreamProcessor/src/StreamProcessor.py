@@ -99,7 +99,7 @@ final_df = expanded_df \
 
 # Ghi dữ liệu vào Cassandra
 query = final_df.writeStream \
-    .trigger(processingTime='1500 milliseconds') \
+    .trigger(processingTime='1000 milliseconds') \
     .foreachBatch(lambda batchDF, batchID:
         batchDF.write \
             .format("org.apache.spark.sql.cassandra") \

@@ -25,7 +25,15 @@ resource "kubernetes_manifest" "stream-processor" {
       restartPolicy = {
         type = "Always"
       }
-
+      volumes = [
+        {
+          name = "spark-volume"
+          hostPath = {
+            path = "/host/data"  
+            type = "DirectoryOrCreate"
+          }
+        }
+      ]
       driver = {
         cores      = 2
         memory     = "1g"
@@ -45,10 +53,16 @@ resource "kubernetes_manifest" "stream-processor" {
             }
           }
         ]
+        volumeMounts = [
+          {
+            name      = "spark-volume"
+            mountPath = "/host/data" 
+          }
+        ]
       }
       executor = {
         cores      = 2
-        instances  = 2
+        instances  = 3     # Number of executors, can decrease or increase based on the workload
         memory     = "2100m"
         labels = {
           version = "3.4.4"
@@ -63,6 +77,12 @@ resource "kubernetes_manifest" "stream-processor" {
             secretRef = {
               name = "pipeline-secrets"
             }
+          }
+        ]
+        volumeMounts = [
+          {
+            name      = "spark-volume"
+            mountPath = "/host/data" 
           }
         ]
       }

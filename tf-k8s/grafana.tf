@@ -12,7 +12,7 @@ resource "kubernetes_deployment" "grafana" {
     kubernetes_config_map.grafana-dashboard-pipeline,
     kubernetes_config_map.grafana-provisioning-datasources,
     kubernetes_config_map.grafana-provisioning-dashboards,
-    kubernetes_persistent_volume_claim.grafana-pvc
+    kubernetes_persistent_volume_claim.grafana-volume
   ]
 
   spec {
@@ -55,9 +55,9 @@ resource "kubernetes_deployment" "grafana" {
           }
         }
         volume {
-          name = "grafana-pvc"
+          name = "grafana-volume"
           persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.grafana-pvc.metadata[0].name
+            claim_name = "grafana-volume"
           }
         }
         container {
@@ -71,9 +71,10 @@ resource "kubernetes_deployment" "grafana" {
           
           # Mount PVC
           volume_mount {
-            name      = "grafana-pvc"
+            name      = "grafana-volume"
             mount_path = "/var/lib/grafana"
           }
+          
           # Mount dashboards
           volume_mount {
             name       = "grafana-dashboard-pipeline"

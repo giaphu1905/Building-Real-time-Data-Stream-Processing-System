@@ -81,23 +81,20 @@ resource "helm_release" "spark-operator" {
   repository = "https://kubeflow.github.io/spark-operator"
   chart      = "spark-operator"
   namespace  = "spark-operator"
+  version     = "2.1.0"
   create_namespace = true
   depends_on = [ 
     kubernetes_namespace.spark-operator,
   ]
   set {
     name  = "spark.jobNamespaces"
-    value = "{pipeline}"
-  }
-
-  set {
-    name  = "installCRDs"
-    value = "true"
+    value = "{${var.namespace}}"
   }
 }
 
 # resource "kubernetes_manifest" "spark-operator-crds" {
-#   for_each = fileset("./spark_crds", "*.yaml") # Lấy danh sách các file .yaml
-#   manifest = yamldecode(file("./spark_crds/${each.value}")) # Sử dụng trực tiếp each.value, không thêm .yaml
+#   for_each = fileset("./spark_crds", "*.yaml") 
+#   manifest = yamldecode(file("./spark_crds/${each.value}"))
 # }
+
 

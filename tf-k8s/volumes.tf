@@ -4,11 +4,11 @@ resource "kubernetes_persistent_volume" "cassandra-db-volume" {
   }
   spec {
     capacity = {
-      storage = "3Gi"
+      storage = "15Gi"
     }
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
     storage_class_name = "hostpath"
-    persistent_volume_reclaim_policy = "Delete"
+    persistent_volume_reclaim_policy = "Retain"
     persistent_volume_source {
       host_path {
         path = "/var/lib/minikube/pv0001/"
@@ -32,12 +32,12 @@ resource "kubernetes_persistent_volume_claim" "cassandra-db-volume" {
   ]
 
   spec {
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
     storage_class_name = "hostpath"
 
     resources {
       requests = {
-        storage = "3Gi"
+        storage = "15Gi"
       }
     }
   }
@@ -53,11 +53,11 @@ resource "kubernetes_persistent_volume" "kafka-volume" {
   ]
   spec {
     capacity = {
-      storage = "1Gi"
+      storage = "5Gi"
     }
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
     storage_class_name = "hostpath"
-    persistent_volume_reclaim_policy = "Delete"
+    persistent_volume_reclaim_policy = "Retain"
     persistent_volume_source {
       host_path {
         path = "/var/lib/minikube/pv0002/"
@@ -82,32 +82,29 @@ resource "kubernetes_persistent_volume_claim" "kafka-volume" {
   ]
 
   spec {
-    access_modes = ["ReadWriteMany"]
+    access_modes = ["ReadWriteOnce"]
     storage_class_name = "hostpath"
 
     resources {
       requests = {
-        storage = "1Gi"
+        storage = "5Gi"
       }
     }
   }
 }
 
-resource "kubernetes_persistent_volume" "grafana-pv" {
+resource "kubernetes_persistent_volume" "grafana-volume" {
   metadata {
-    name = "grafana-pv"
+    name = "grafana-volume"
   }
-  depends_on = [ 
-    kubernetes_persistent_volume_claim.kafka-volume,
-    kubernetes_persistent_volume.kafka-volume
-  ]
+
   spec {
     capacity = {
-      storage = "5Gi"
+      storage = "1Gi"
     }
 
     access_modes = ["ReadWriteOnce"]
-    persistent_volume_reclaim_policy = "Delete"
+    persistent_volume_reclaim_policy = "Retain"
 
     persistent_volume_source {
       host_path {
@@ -117,25 +114,23 @@ resource "kubernetes_persistent_volume" "grafana-pv" {
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "grafana-pvc" {
+resource "kubernetes_persistent_volume_claim" "grafana-volume" {
   metadata {
-    name      = "grafana-pvc"
+    name      = "grafana-volume"
     namespace = kubernetes_namespace.grafana-namespace.metadata[0].name
     labels = {
       app = "grafana-volume"
     }
   }
   depends_on = [ 
-    kubernetes_persistent_volume.grafana-pv,
-    kubernetes_persistent_volume_claim.kafka-volume,
-    kubernetes_persistent_volume.kafka-volume
+    kubernetes_persistent_volume.grafana-volume,
    ]
   spec {
     access_modes = ["ReadWriteOnce"]
     storage_class_name = "hostpath"
     resources {
       requests = {
-        storage = "5Gi"
+        storage = "1Gi"
       }
     }
 

@@ -205,7 +205,8 @@
           "queryType": "query",
           "rawQuery": true,
           "refId": "A",
-          "target": "select symbol, price_volume_multiply, ingest_timestamp from running_averages_15_sec where symbol='$ticker';"
+          "target": "SELECT ingest_timestamp AS \"time\", price_volume_multiply AS \"price_volume\" FROM running_averages_15_sec WHERE symbol = '$ticker' AND ingest_timestamp > $__timeFrom AND ingest_timestamp < $__timeTo;"
+
         }
       ],
       "title": "Volume-Weighted Average Price from last 15 seconds",
