@@ -1,0 +1,35 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code từ repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2. Cài đặt Terraform
+      - name: Install Terraform
+        run: |
+          curl -LO https://releases.hashicorp.com/terraform/1.10.3/terraform_1.10.3_linux_amd64.zip
+          unzip terraform_1.10.3_linux_amd64.zip
+          mv terraform /usr/local/bin/
+          terraform --version
+
+      # 3. Terraform init
+      - name: Terraform Init
+        run: terraform init
+
+      # 4. Terraform apply cho một target cụ thể
+      - name: Apply Specific Target
+        run: terraform apply -target=helm_release.spark-operator -auto-approve
+
+      # 5. Terraform apply toàn bộ
+      - name: Apply All
+        run: terraform apply -auto-approve
