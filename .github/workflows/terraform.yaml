@@ -21,8 +21,10 @@ jobs:
           unzip terraform_1.10.3_linux_amd64.zip
           mv terraform /usr/local/bin/
           terraform --version
+
       - name: Change directory to Terraform config folder
-        run: cd ../../tf-k8s/
+        run: cd ../../tf-k8s
+        
       # 3. Terraform init
       - name: Terraform Init
         run: terraform init
