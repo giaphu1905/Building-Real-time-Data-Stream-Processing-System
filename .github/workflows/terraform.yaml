@@ -22,9 +22,12 @@ jobs:
           mv terraform /usr/local/bin/
           terraform --version
 
+      - name: Print current working directory
+        run: pwd
+
       - name: Change directory to Terraform config folder
         run: cd ../../tf-k8s
-        
+
       # 3. Terraform init
       - name: Terraform Init
         run: terraform init
