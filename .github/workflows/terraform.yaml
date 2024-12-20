@@ -24,6 +24,8 @@ jobs:
 
       - name: Change directory to Terraform config folder
         run: cd tf-k8s
+      - name: List files in tf-k8s directory
+        run: ls -al tf-k8s
 
       # 3. Terraform init
       - name: Terraform Init
